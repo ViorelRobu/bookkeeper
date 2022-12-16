@@ -8,6 +8,7 @@ import (
 )
 
 type Book struct {
+	Id     int    `json:"id"`
 	Name   string `json:"name"`
 	Author string `json:"author"`
 	ISBN   string `json:"isbn"`
@@ -30,10 +31,7 @@ func notFound(w http.ResponseWriter, r *http.Request) {
 
 func listBooks(w http.ResponseWriter, r *http.Request) {
 	message := genericResponse{
-		Data: []Book{
-			{Name: "Test 1", Author: "Test Author", ISBN: "1234"},
-			{Name: "Test 2", Author: "Test Author", ISBN: "1234"},
-		},
+		Data: getAllBooks().Result,
 	}
 
 	res, err := json.Marshal(message)
