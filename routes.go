@@ -1,7 +1,13 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+)
 
 func HandleRoutes() {
-	http.HandleFunc("/", home)
+	// all not found routes will go here, together with "/"
+	http.HandleFunc("/", notFound)
+
+	// the other routes
+	http.HandleFunc("/books/all", listBooks)
 }
