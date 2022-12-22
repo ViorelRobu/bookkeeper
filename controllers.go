@@ -26,7 +26,7 @@ func notFound(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusNotFound)
-	fmt.Fprintln(w, string(res))
+	_, _ = fmt.Fprintln(w, string(res))
 }
 
 func listBooks(w http.ResponseWriter, r *http.Request) {
@@ -40,5 +40,5 @@ func listBooks(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 
-	fmt.Fprintln(w, string(res))
+	_, _ = fmt.Fprintln(w, string(res))
 }

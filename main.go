@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"log"
 	"net/http"
@@ -9,31 +10,34 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type Database struct {
-	Name string
-	User string
-	Pass string
-}
+var DB *sql.DB
 
 func main() {
 	fmt.Println("Starting web server on port :8080...")
 	fmt.Println("Web server started - ok")
 
-	db := Database{}
-	db.getCredsFromEnv()
-	HandleRoutes()
+	dbName := os.Getenv("DB_NAME")
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASSWORD")
 
-	fmt.Println(db)
+	conn, err := sql.Open("mysql", dbUser+":"+dbPass+"@tcp(database:3306)/"+dbName)
+	DB = conn
+	if err != nil {
+		panic(err.Error())
+	}
+
+	defer func(conn *sql.DB) {
+		err := conn.Close()
+		if err != nil {
+			panic(err.Error())
+		}
+	}(conn)
+
+	HandleRoutes()
 
 	serverStartError := http.ListenAndServe(":8080", nil)
 
 	if serverStartError != nil {
 		log.Fatal(serverStartError)
 	}
-}
-
-func (db *Database) getCredsFromEnv() {
-	db.Name = os.Getenv("DB_NAME")
-	db.User = os.Getenv("DB_USER")
-	db.Pass = os.Getenv("DB_PASSWORD")
 }

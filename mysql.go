@@ -1,8 +1,6 @@
 package main
 
 import (
-	"database/sql"
-
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -11,13 +9,7 @@ type BooksCollection struct {
 }
 
 func getAllBooks() BooksCollection {
-	db, err := sql.Open("mysql", "root:password@tcp(database:3306)/golang")
-
-	if err != nil {
-		panic(err.Error())
-	}
-
-	results, queryErr := db.Query("SELECT * FROM books")
+	results, queryErr := DB.Query("SELECT * FROM books")
 
 	if queryErr != nil {
 		panic(queryErr.Error())
@@ -35,8 +27,6 @@ func getAllBooks() BooksCollection {
 
 		AllBooks.Result = append(AllBooks.Result, book)
 	}
-
-	defer db.Close()
 
 	return AllBooks
 }
